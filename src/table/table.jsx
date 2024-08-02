@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { Modal, Button } from 'react-bootstrap';
 import EditButton from './ButtonEdit';
 import DeleteButton from './ButtonDelete';
@@ -7,17 +6,17 @@ import AddButton from './ButtonCreate';
 
 const ProductTable = () => {
   const [products, setProducts] = useState([
-    { code: '001', name: 'Producto A', price: 10.0, category: 'Categoría 1' },
-    { code: '002', name: 'Producto B', price: 20.0, category: 'Categoría 2' },
-    { code: '003', name: 'Producto C', price: 30.0, category: 'Categoría 1' },
-    { code: '004', name: 'Producto D', price: 40.0, category: 'Categoría 3' },
+    { code: '001', name: 'Producto A', price: 10.0, category: 'Categoría 1', quantity: 100 },
+    { code: '002', name: 'Producto B', price: 20.0, category: 'Categoría 2', quantity: 200 },
+    { code: '003', name: 'Producto C', price: 30.0, category: 'Categoría 1', quantity: 150 },
+    { code: '004', name: 'Producto D', price: 40.0, category: 'Categoría 3', quantity: 80 },
   ]);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [currentProductIndex, setCurrentProductIndex] = useState(null);
-  const [currentProduct, setCurrentProduct] = useState({ code: '', name: '', price: '', category: '' });
-  const [newProduct, setNewProduct] = useState({ code: '', name: '', price: '', category: '' });
+  const [currentProduct, setCurrentProduct] = useState({ code: '', name: '', price: '', category: '', quantity: '' });
+  const [newProduct, setNewProduct] = useState({ code: '', name: '', price: '', category: '', quantity: '' });
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -55,23 +54,27 @@ const ProductTable = () => {
 
   const handleAddProduct = () => {
     setProducts([...products, newProduct]);
-    setNewProduct({ code: '', name: '', price: '', category: '' });
+    setNewProduct({ code: '', name: '', price: '', category: '', quantity: '' });
     setShowAddModal(false);
   };
 
   return (
     <div className="product-table-container">
-      <div className="d-flex justify-content-end ">
-        <AddButton onClick={() => setShowAddModal(true)} />
-      </div>
       <div className="table-container">
         <table className="table table-striped">
           <thead>
+            <tr>
+              <th colSpan="6">Productos</th>
+              <th className="text-end">
+                <AddButton onClick={() => setShowAddModal(true)} />
+              </th>
+            </tr>
             <tr>
               <th>Código</th>
               <th>Nombre</th>
               <th>Precio de Venta</th>
               <th>Categoría</th>
+              <th>Cantidad</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -82,7 +85,8 @@ const ProductTable = () => {
                 <td>{product.name}</td>
                 <td>{product.price}</td>
                 <td>{product.category}</td>
-                <td>
+                <td>{product.quantity}</td>
+                <td className="d-flex justify-content-between">
                   <EditButton onClick={() => handleEditProduct(index)} />
                   <DeleteButton onClick={() => handleDeleteProduct(index)} />
                 </td>
@@ -127,6 +131,14 @@ const ProductTable = () => {
             name="category"
             placeholder="Categoría"
             value={currentProduct.category}
+            onChange={handleInputChange}
+            className="form-control mb-2"
+          />
+          <input
+            type="number"
+            name="quantity"
+            placeholder="Cantidad"
+            value={currentProduct.quantity}
             onChange={handleInputChange}
             className="form-control mb-2"
           />
@@ -192,6 +204,14 @@ const ProductTable = () => {
             name="category"
             placeholder="Categoría"
             value={newProduct.category}
+            onChange={handleNewProductChange}
+            className="form-control mb-2"
+          />
+          <input
+            type="number"
+            name="quantity"
+            placeholder="Cantidad"
+            value={newProduct.quantity}
             onChange={handleNewProductChange}
             className="form-control mb-2"
           />
