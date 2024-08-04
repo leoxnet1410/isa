@@ -3,6 +3,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import ProductTable from './table/table'
 import Login from "./home/form";
 import Cuadros from "./home/welcome";
+import Sales from "./sales";
 import './App.scss'
 
 
@@ -21,6 +22,7 @@ function App() {
         <Route path="table" element={<ProductTable />} />
         <Route path="/" element={<Login />} />
         <Route path="welcome" element={<Cuadros />} />
+        <Route path="sales" element={<Sales />} />
 
         </Routes>
       </Container>

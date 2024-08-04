@@ -20,7 +20,7 @@ const Cuadros = () => {
     {
       imagenSrc: fondoImage,
       descripcion: 'Ventas',
-      ruta: '/',
+      ruta: 'sales',
     },
     {
       imagenSrc: fondoImage,
