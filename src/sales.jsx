@@ -1,179 +1,157 @@
-import { Table, Button, Container, Modal, Form, InputGroup, FormControl } from 'react-bootstrap';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Table, Button, Modal, Form } from 'react-bootstrap';
+import { ApiClient } from './api/ApiClient';
 
-import fondo from './home/img/fondo.jpg';
-
-const initialProducts = [
-  { id: 1, code: 'P001', name: 'Producto 1', image: fondo, units: 10, category: 'Categoría 1', price: 5.0 },
-  { id: 2, code: 'P002', name: 'Producto 2', image: fondo, units: 20, category: 'Categoría 2', price: 10.0 },
-
-];
-
-const Sales= () => {
-  const [products, setProducts] = useState(initialProducts);
-  const [filteredProducts, setFilteredProducts] = useState(initialProducts);
-  const [showModal, setShowModal] = useState(false);
+const Sales = () => {
+  const [products, setProducts] = useState([]);
+  const [show, setShow] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [sellUnits, setSellUnits] = useState(0);
-  const [sellPrice, setSellPrice] = useState(0);
+  const [saleQuantity, setSaleQuantity] = useState('');
   const [discount, setDiscount] = useState(0);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [showImageModal, setShowImageModal] = useState(false);
-  const [selectedImage, setSelectedImage] = useState('');
+  const [total, setTotal] = useState(0);
 
-  const handleSellClick = (product) => {
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const data = await ApiClient.products.getAll();
+      setProducts(data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
+  };
+
+  const handleShow = (product) => {
     setSelectedProduct(product);
-    setSellUnits(0);
-    setSellPrice(product.price);
+    setSaleQuantity('');
     setDiscount(0);
-    setShowModal(true);
+    setTotal(0);
+    setShow(true);
   };
 
-  const handleSell = () => {
-    const updatedProducts = products.map(product => 
-      product.id === selectedProduct.id 
-        ? { ...product, units: product.units - sellUnits } 
-        : product
-    );
-    setProducts(updatedProducts);
-    setFilteredProducts(updatedProducts.filter(product => 
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.code.toLowerCase().includes(searchTerm.toLowerCase())
-    ));
-    setShowModal(false);
+  const handleClose = () => setShow(false);
+
+  const handleQuantityChange = (e) => {
+    const quantity = e.target.value;
+    setSaleQuantity(quantity);
+    calculateTotal(quantity, discount, selectedProduct.price);
   };
 
-  const handleSearch = (e) => {
-    const value = e.target.value.toLowerCase();
-    setSearchTerm(value);
-    setFilteredProducts(products.filter(product => 
-      product.name.toLowerCase().includes(value) ||
-      product.code.toLowerCase().includes(value)
-    ));
+  const handleDiscountChange = (e) => {
+    const discount = e.target.value;
+    setDiscount(discount);
+    calculateTotal(saleQuantity, discount, selectedProduct.price);
   };
 
-  const calculateTotal = () => {
-    const totalBeforeDiscount = sellUnits * sellPrice;
-    const totalAfterDiscount = totalBeforeDiscount - discount;
-    return { totalBeforeDiscount, totalAfterDiscount };
+  const calculateTotal = (quantity, discount, price) => {
+    const total = (quantity * price) * (1 - discount / 100);
+    setTotal(total.toFixed(2));
   };
 
-  const { totalBeforeDiscount, totalAfterDiscount } = calculateTotal();
+  const handleSell = async () => {
+    if (selectedProduct && saleQuantity > 0 && saleQuantity <= selectedProduct.quantity) {
+      try {
+        const updatedProduct = {
+          ...selectedProduct,
+          quantity: selectedProduct.quantity - saleQuantity,
+        };
 
-  const handleImageClick = (image) => {
-    setSelectedImage(image);
-    setShowImageModal(true);
+        await ApiClient.sales.create({
+          sale: { 
+            product_id: selectedProduct.id,
+            quantity: saleQuantity,
+            discount: discount,
+          }
+        });
+
+        await ApiClient.products.update(selectedProduct.id, updatedProduct);
+
+        fetchProducts();
+        handleClose();
+      } catch (error) {
+        console.error('Error selling product:', error);
+      }
+    }
   };
 
   return (
-    <Container className="sales-table-container">
-      <div className="header">
-        <h2>Ventas de Productos</h2>
-        <InputGroup className="search-box">
-          <FormControl
-            placeholder="Buscar producto"
-            value={searchTerm}
-            onChange={handleSearch}
-          />
-        </InputGroup>
-      </div>
+    <>
       <Table striped bordered hover>
         <thead>
           <tr>
             <th>Código</th>
             <th>Nombre</th>
-            <th>Foto</th>
-            <th>Unidades</th>
+            <th>Precio</th>
             <th>Categoría</th>
-            <th>Precio por Unidad</th>
+            <th>Descripción</th>
+            <th>Cantidad</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {filteredProducts.map(product => (
+          {products.map(product => (
             <tr key={product.id}>
               <td>{product.code}</td>
               <td>{product.name}</td>
-              <td>
-                <img 
-                  src={product.image} 
-                  alt={product.name} 
-                  className="product-image" 
-                  onClick={() => handleImageClick(product.image)}
-                  style={{ cursor: 'pointer' }}
-                />
-              </td>
-              <td>{product.units}</td>
+              <td>{product.price}</td>
               <td>{product.category}</td>
-              <td>${product.price.toFixed(2)}</td>
+              <td>{product.description}</td>
+              <td>{product.quantity}</td>
               <td>
-                <Button variant="primary" onClick={() => handleSellClick(product)}>Vender</Button>
+                <Button variant="success" onClick={() => handleShow(product)}>Vender</Button>
               </td>
             </tr>
           ))}
         </tbody>
       </Table>
 
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
+      <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Vender Producto</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group>
-              <Form.Label>Unidades a vender</Form.Label>
-              <Form.Control 
-                type="tel" 
-                value={sellUnits} 
-                onChange={(e) => setSellUnits(Number(e.target.value))} 
+            <Form.Group controlId="formSaleQuantity">
+              <Form.Label>Unidades a Vender</Form.Label>
+              <Form.Control
+                type="number"
+                name="quantity"
+                value={saleQuantity}
+                onChange={handleQuantityChange}
                 min="1"
-                max={selectedProduct?.units || 1}
+                max={selectedProduct ? selectedProduct.quantity : ''}
               />
             </Form.Group>
-            <Form.Group>
-              <Form.Label>Precio por unidad</Form.Label>
-              <Form.Control 
-                type="tel" 
-                value={sellPrice} 
-                onChange={(e) => setSellPrice(Number(e.target.value))} 
+            <Form.Group controlId="formDiscount">
+              <Form.Label>Descuento (%)</Form.Label>
+              <Form.Control
+                type="number"
+                name="discount"
+                value={discount}
+                onChange={handleDiscountChange}
                 min="0"
-                step="0.01"
+                max="100"
               />
             </Form.Group>
-            <Form.Group>
-              <Form.Label>Descuento</Form.Label>
-              <Form.Control 
-                type="tel" 
-                value={discount} 
-                onChange={(e) => setDiscount(Number(e.target.value))} 
-                min="0"
-                step="0.01"
+            <Form.Group controlId="formTotal">
+              <Form.Label>Total</Form.Label>
+              <Form.Control
+                type="text"
+                name="total"
+                value={total}
+                readOnly
               />
             </Form.Group>
-            <div className="mt-3">
-              <p>Total antes del descuento: ${totalBeforeDiscount.toFixed(2)}</p>
-              <p>Total después del descuento: ${totalAfterDiscount.toFixed(2)}</p>
-            </div>
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>Cancelar</Button>
-          <Button variant="primary" onClick={handleSell}>Confirmar Venta</Button>
+          <Button variant="secondary" onClick={handleClose}>Cancelar</Button>
+          <Button variant="primary" onClick={handleSell}>Vender</Button>
         </Modal.Footer>
       </Modal>
-
-      <Modal show={showImageModal} onHide={() => setShowImageModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Imagen del Producto</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="text-center">
-          <img src={selectedImage} alt="Producto" className="img-fluid" />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowImageModal(false)}>Cerrar</Button>
-        </Modal.Footer>
-      </Modal>
-    </Container>
+    </>
   );
 };
 

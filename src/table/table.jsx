@@ -1,231 +1,189 @@
-import React, { useState } from 'react';
-import { Modal, Button } from 'react-bootstrap';
-import EditButton from './ButtonEdit';
-import DeleteButton from './ButtonDelete';
-import AddButton from './ButtonCreate';
+import React, { useState, useEffect } from 'react';
+import { Table, Button, Modal, Form } from 'react-bootstrap';
+import { ApiClient } from '../api/ApiClient'; 
 
 const ProductTable = () => {
-  const [products, setProducts] = useState([
-    { code: '001', name: 'Producto A', price: 10.0, category: 'Categoría 1', quantity: 100 },
-    { code: '002', name: 'Producto B', price: 20.0, category: 'Categoría 2', quantity: 200 },
-    { code: '003', name: 'Producto C', price: 30.0, category: 'Categoría 1', quantity: 150 },
-    { code: '004', name: 'Producto D', price: 40.0, category: 'Categoría 3', quantity: 80 },
-  ]);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [currentProductIndex, setCurrentProductIndex] = useState(null);
-  const [currentProduct, setCurrentProduct] = useState({ code: '', name: '', price: '', category: '', quantity: '' });
-  const [newProduct, setNewProduct] = useState({ code: '', name: '', price: '', category: '', quantity: '' });
+  const [products, setProducts] = useState([]);
+  const [show, setShow] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [productData, setProductData] = useState({
+    code: '',
+    name: '',
+    price: '',
+    category: '',
+    quantity: '',
+    description: ''
+  });
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setCurrentProduct({ ...currentProduct, [name]: value });
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const data = await ApiClient.products.getAll();
+      setProducts(data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
   };
 
-  const handleNewProductChange = (event) => {
-    const { name, value } = event.target;
-    setNewProduct({ ...newProduct, [name]: value });
+  const handleShow = (product = null) => {
+    setEditingProduct(product);
+    if (product) {
+      setProductData(product);
+    } else {
+      setProductData({
+        code: '',
+        name: '',
+        price: '',
+        category: '',
+        quantity: '',
+        description: '' 
+      });
+    }
+    setShow(true);
   };
 
-  const handleEditProduct = (index) => {
-    setCurrentProductIndex(index);
-    setCurrentProduct(products[index]);
-    setShowEditModal(true);
+  const handleClose = () => setShow(false);
+
+  const handleChange = (e) => {
+    setProductData({
+      ...productData,
+      [e.target.name]: e.target.value
+    });
   };
 
-  const saveProductChanges = () => {
-    const updatedProducts = [...products];
-    updatedProducts[currentProductIndex] = currentProduct;
-    setProducts(updatedProducts);
-    setShowEditModal(false);
+  const handleSubmit = async () => {
+    try {
+      const payload = {
+        product: productData
+      };
+  
+      if (editingProduct) {
+        await ApiClient.products.update(editingProduct.id, payload);
+      } else {
+        await ApiClient.products.add(payload);
+      }
+      fetchProducts();
+      handleClose();
+    } catch (error) {
+      console.error('Error saving product:', error);
+    }
   };
 
-  const handleDeleteProduct = (index) => {
-    setCurrentProductIndex(index);
-    setShowDeleteModal(true);
-  };
-
-  const confirmDeleteProduct = () => {
-    const updatedProducts = products.filter((_, i) => i !== currentProductIndex);
-    setProducts(updatedProducts);
-    setShowDeleteModal(false);
-  };
-
-  const handleAddProduct = () => {
-    setProducts([...products, newProduct]);
-    setNewProduct({ code: '', name: '', price: '', category: '', quantity: '' });
-    setShowAddModal(false);
+  const handleDelete = async (id) => {
+    try {
+      await ApiClient.products.delete(id);
+      fetchProducts();
+    } catch (error) {
+      console.error('Error deleting product:', error);
+    }
   };
 
   return (
-    <div className="product-table-container">
-      <div className="table-container">
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th colSpan="6">Productos</th>
-              <th className="text-end">
-                <AddButton onClick={() => setShowAddModal(true)} />
-              </th>
+    <>
+      <Button variant="primary" onClick={() => handleShow()}>Crear Producto</Button>
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Categoría</th>
+            <th>Cantidad</th>
+            <th>Descripción</th> 
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {products.map(product => (
+            <tr key={product.id}>
+              <td>{product.code}</td>
+              <td>{product.name}</td>
+              <td>{product.price}</td>
+              <td>{product.category}</td>
+              <td>{product.quantity}</td>
+              <td>{product.description}</td>
+              <td>
+                <Button variant="warning" onClick={() => handleShow(product)}>Editar</Button>{' '}
+                <Button variant="danger" onClick={() => handleDelete(product.id)}>Eliminar</Button>
+              </td>
             </tr>
-            <tr>
-              <th>Código</th>
-              <th>Nombre</th>
-              <th>Precio de Venta</th>
-              <th>Categoría</th>
-              <th>Cantidad</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product, index) => (
-              <tr key={index}>
-                <td>{product.code}</td>
-                <td>{product.name}</td>
-                <td>{product.price}</td>
-                <td>{product.category}</td>
-                <td>{product.quantity}</td>
-                <td className="d-flex justify-content-between">
-                  <EditButton onClick={() => handleEditProduct(index)} />
-                  <DeleteButton onClick={() => handleDeleteProduct(index)} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </Table>
 
-      {/* Modal Editar Producto */}
-      <Modal show={showEditModal} onHide={() => setShowEditModal(false)}>
+      <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Editar Producto</Modal.Title>
+          <Modal.Title>{editingProduct ? 'Editar Producto' : 'Crear Producto'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <input
-            type="text"
-            name="code"
-            placeholder="Código"
-            value={currentProduct.code}
-            onChange={handleInputChange}
-            className="form-control mb-2"
-          />
-          <input
-            type="text"
-            name="name"
-            placeholder="Nombre"
-            value={currentProduct.name}
-            onChange={handleInputChange}
-            className="form-control mb-2"
-          />
-          <input
-            type="number"
-            name="price"
-            placeholder="Precio de Venta"
-            value={currentProduct.price}
-            onChange={handleInputChange}
-            className="form-control mb-2"
-          />
-          <input
-            type="text"
-            name="category"
-            placeholder="Categoría"
-            value={currentProduct.category}
-            onChange={handleInputChange}
-            className="form-control mb-2"
-          />
-          <input
-            type="number"
-            name="quantity"
-            placeholder="Cantidad"
-            value={currentProduct.quantity}
-            onChange={handleInputChange}
-            className="form-control mb-2"
-          />
+          <Form>
+            <Form.Group controlId="formProductCode">
+              <Form.Label>Código</Form.Label>
+              <Form.Control
+                type="text"
+                name="code"
+                value={productData.code}
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <Form.Group controlId="formProductName">
+              <Form.Label>Nombre</Form.Label>
+              <Form.Control
+                type="text"
+                name="name"
+                value={productData.name}
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <Form.Group controlId="formProductPrice">
+              <Form.Label>Precio</Form.Label>
+              <Form.Control
+                type="text"
+                name="price"
+                value={productData.price}
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <Form.Group controlId="formProductCategory">
+              <Form.Label>Categoría</Form.Label>
+              <Form.Control
+                type="text"
+                name="category"
+                value={productData.category}
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <Form.Group controlId="formProductQuantity">
+              <Form.Label>Cantidad</Form.Label>
+              <Form.Control
+                type="text"
+                name="quantity"
+                value={productData.quantity}
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <Form.Group controlId="formProductDescription">
+              <Form.Label>Descripción</Form.Label>
+              <Form.Control
+                as="textarea"
+                name="description"
+                value={productData.description}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowEditModal(false)}>
-            Cancelar
-          </Button>
-          <Button variant="primary" onClick={saveProductChanges}>
-            Guardar Cambios
+          <Button variant="secondary" onClick={handleClose}>Cancelar</Button>
+          <Button variant="primary" onClick={handleSubmit}>
+            {editingProduct ? 'Guardar Cambios' : 'Crear Producto'}
           </Button>
         </Modal.Footer>
       </Modal>
-
-      {/* Modal Eliminar Producto */}
-      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Eliminar Producto</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>¿Estás seguro de que deseas eliminar este producto?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-            Cancelar
-          </Button>
-          <Button variant="danger" onClick={confirmDeleteProduct}>
-            Eliminar
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      {/* Modal Agregar Producto */}
-      <Modal show={showAddModal} onHide={() => setShowAddModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Agregar Producto</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <input
-            type="text"
-            name="code"
-            placeholder="Código"
-            value={newProduct.code}
-            onChange={handleNewProductChange}
-            className="form-control mb-2"
-          />
-          <input
-            type="text"
-            name="name"
-            placeholder="Nombre"
-            value={newProduct.name}
-            onChange={handleNewProductChange}
-            className="form-control mb-2"
-          />
-          <input
-            type="number"
-            name="price"
-            placeholder="Precio de Venta"
-            value={newProduct.price}
-            onChange={handleNewProductChange}
-            className="form-control mb-2"
-          />
-          <input
-            type="text"
-            name="category"
-            placeholder="Categoría"
-            value={newProduct.category}
-            onChange={handleNewProductChange}
-            className="form-control mb-2"
-          />
-          <input
-            type="number"
-            name="quantity"
-            placeholder="Cantidad"
-            value={newProduct.quantity}
-            onChange={handleNewProductChange}
-            className="form-control mb-2"
-          />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowAddModal(false)}>
-            Cancelar
-          </Button>
-          <Button variant="success" onClick={handleAddProduct}>
-            Agregar Producto
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </div>
+    </>
   );
 };
 
