@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form } from 'react-bootstrap';
+import { Table, Button, Modal, Form, Card } from 'react-bootstrap';
 import { ApiClient } from './api/ApiClient';
 
 const Sales = () => {
@@ -65,14 +65,7 @@ const Sales = () => {
         };
 
         // Crear la venta
-        await ApiClient.sales.create({
-          sale: {
-            product_id: selectedProduct.id,
-            quantity: saleQuantity,
-            discount: discount,
-          }
-        });
-
+        
         // Actualizar el producto
         await ApiClient.products.update(selectedProduct.id, updatedData);
 
@@ -88,35 +81,43 @@ const Sales = () => {
   };
 
   return (
-    <>
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>Código</th>
-            <th>Nombre</th>
-            <th>Precio</th>
-            <th>Categoría</th>
-            <th>Descripción</th>
-            <th>Cantidad</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map(product => (
-            <tr key={product.id}>
-              <td>{product.code}</td>
-              <td>{product.name}</td>
-              <td>{product.price}</td>
-              <td>{product.category}</td>
-              <td>{product.description}</td>
-              <td>{product.quantity}</td>
-              <td>
-                <Button variant="success" onClick={() => handleShow(product)}>Vender</Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+    <div className="sales-table-container">
+      <Card className="p-4">
+        <Card.Header className="d-flex justify-content-between align-items-center">
+          <h2>Ventas</h2>
+         
+        </Card.Header>
+        <Card.Body>
+          <Table striped bordered hover className="table-custom">
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Categoría</th>
+                <th>Descripción</th>
+                <th>Cantidad</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {products.map(product => (
+                <tr key={product.id}>
+                  <td>{product.code}</td>
+                  <td>{product.name}</td>
+                  <td>{product.price}</td>
+                  <td>{product.category}</td>
+                  <td>{product.description}</td>
+                  <td>{product.quantity}</td>
+                  <td>
+                    <Button variant="success" onClick={() => handleShow(product)}>Vender</Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </Card.Body>
+      </Card>
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -162,7 +163,7 @@ const Sales = () => {
           <Button variant="primary" onClick={handleSell}>Vender</Button>
         </Modal.Footer>
       </Modal>
-    </>
+    </div>
   );
 };
 

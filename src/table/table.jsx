@@ -33,7 +33,7 @@ const ProductTable = () => {
     if (product) {
       setProductData({
         ...product,
-        price: product.price.toString()  // Si es un número, conviértelo a string para el formulario
+        price: product.price.toString()
       });
     } else {
       setProductData({
@@ -66,7 +66,7 @@ const ProductTable = () => {
         }
       };
       console.log('Submitting product:', payload);
-  
+
       let response;
       if (editingProduct) {
         response = await ApiClient.products.update(editingProduct.id, payload);
@@ -74,28 +74,28 @@ const ProductTable = () => {
         response = await ApiClient.products.add(payload);
       }
       console.log('Server response:', response);
-  
+
       await fetchProducts();
       handleClose();
     } catch (error) {
       console.error('Error saving product:', error);
     }
   };
-  
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (productId) => {
     try {
-      await ApiClient.products.delete(id);
-      fetchProducts();
+      await ApiClient.products.delete(productId);
+      await fetchProducts();
     } catch (error) {
-      console.error('Error deleting product:', error);
+      console.error('Error deleting product:', error.response ? error.response.data : error.message);
+      alert('No se pudo eliminar el producto. Asegúrate de que no tenga ventas asociadas.');
     }
   };
 
   return (
     <>
-      <Button variant="primary" onClick={() => handleShow()}>Crear Producto</Button>
-      <Table striped bordered hover>
+      <Button variant="primary" onClick={() => handleShow()} className="button-custom">Crear Producto</Button>
+      <Table striped bordered hover className="table-custom">
         <thead>
           <tr>
             <th>Código</th>
@@ -117,15 +117,15 @@ const ProductTable = () => {
               <td>{product.quantity}</td>
               <td>{product.description}</td>
               <td>
-                <Button variant="warning" onClick={() => handleShow(product)}>Editar</Button>{' '}
-                <Button variant="danger" onClick={() => handleDelete(product.id)}>Eliminar</Button>
+                <Button variant="warning" onClick={() => handleShow(product)} className="button-custom">Editar</Button>{' '}
+                <Button variant="danger" onClick={() => handleDelete(product.id)} className="button-custom">Eliminar</Button>
               </td>
             </tr>
           ))}
         </tbody>
       </Table>
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={handleClose} className="modal-custom">
         <Modal.Header closeButton>
           <Modal.Title>{editingProduct ? 'Editar Producto' : 'Crear Producto'}</Modal.Title>
         </Modal.Header>
@@ -153,7 +153,7 @@ const ProductTable = () => {
               <Form.Label>Precio</Form.Label>
               <Form.Control
                 type="number"
-                step="0.01" // Permite valores decimales
+                step="0.01"
                 name="price"
                 value={productData.price}
                 onChange={handleChange}

@@ -1,239 +1,330 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+// styles/global.scss
+
+// Estilos generales para la aplicación
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: url('./home/img/shop.png') no-repeat center center/cover;
-  }
-  
-  .sales-table-container {
-    margin: 20px;
-  
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-  
-    .search-box {
-      width: 300px;
-    }
-  
-    .table {
-      border: 1px solid #dee2e6;
-      border-radius: 0.25rem;
-      overflow: hidden;
-      background-color: #fff;
-  
-      th, td {
-        vertical-align: middle;
-        text-align: center;
-      }
-  
-      thead {
-        background-color: #f8f9fa;
-  
-        th {
-          font-weight: bold;
-        }
-      }
-  
-      tbody {
-        tr:nth-child(even) {
-          background-color: #f2f2f2;
-        }
-  
-        .product-image {
-          width: 50px;
-          height: 50px;
-          object-fit: cover;
-        }
-      }
-    }
-  
-    .btn-primary {
-      display: block;
-      margin: 20px auto;
-    }
-  
-    .img-fluid {
-      max-width: 100%;
-      height: auto;
-    }
-  }
- 
- 
-  
-  .btn-warning {
-    background-color: #ffc107;
-    border-color: #ffc107;
-  
-    &:hover {
-      background-color: #e0a800;
-      border-color: #d39e00;
-    }
-  }
-  
-  .btn-danger {
-    background-color: #dc3545;
-    border-color: #dc3545;
-  
-    &:hover {
-      background-color: #c82333;
-      border-color: #bd2130;
-    }
-  }
-  
-  .btn-success {
-    background-color: #28a745;
-    border-color: #28a745;
-  
-    &:hover {
-      background-color: #218838;
-      border-color: #1e7e34;
-    }
-  }
-  
-  .d-flex {
-    display: flex;
-  }
-  
-  .justify-content-end {
-    justify-content: flex-end;
-  }
-  
-  .mb-3 {
-    margin-bottom: 1rem;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url('./home/img/shop.png') no-repeat center center/cover;
+}
+
 * {
- 
-  
   font-family: 'Poppins', sans-serif;
 }
 
+// Contenedor general para las tablas de ventas
+.sales-table-container {
+  margin: 20px;
+  
+  .sales-table-card {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
+    .card-header {
+      background: #007bff;
+      color: #fff;
+
+      .btn-primary {
+        margin-top: 10px;
+      }
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+  }
+
+  .sales-table-custom {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    thead {
+      background-color: #007bff;
+      color: #fff;
+
+      th {
+        font-weight: bold;
+        text-align: center;
+      }
+    }
+
+    tbody {
+      tr {
+        &:nth-child(even) {
+          background-color: #f2f2f2;
+        }
+
+        &:hover {
+          background-color: #e9ecef;
+        }
+      }
+
+      td {
+        text-align: center;
+      }
+    }
+  }
+
+  .modal-custom {
+    .modal-header {
+      background-color: #007bff;
+      color: #fff;
+      border-bottom: none;
+    }
+
+    .modal-footer {
+      border-top: none;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
+
+    .btn-secondary {
+      border: none;
+
+      &:hover {
+        background-color: #e9ecef;
+      }
+    }
+  }
+}
+
+// Estilos específicos para el componente ProductTable
+.product-table-container {
+  margin: 20px;
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-table-card {
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  .card-header {
+    background: #007bff;
+    color: #fff;
+
+    .btn-primary {
+      margin-top: 10px;
+    }
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+}
+
+.product-table-custom {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  thead {
+    background-color: #007bff;
+    color: #fff;
+
+    th {
+      font-weight: bold;
+      text-align: center;
+    }
+  }
+
+  tbody {
+    tr {
+      &:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      &:hover {
+        background-color: #e9ecef;
+      }
+    }
+
+    td {
+      text-align: center;
+    }
+  }
+}
+
+.product-modal-custom {
+  .modal-header {
+    background-color: #007bff;
+    color: #fff;
+    border-bottom: none;
+  }
+
+  .modal-footer {
+    border-top: none;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    border: none;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+
+  .btn-secondary {
+    border: none;
+
+    &:hover {
+      background-color: #e9ecef;
+    }
+  }
+}
+
+.product-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+.product-button-custom {
+  margin: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.product-table-custom {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+}
 
 .wrapper {
-    width: 400px;
-    padding: 40px 30px;
-    background: rgba(0, 0, 0, 0.5); /* Ajuste del color de fondo */
-    border-radius: 10px;
-    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5); /* Ajuste de la sombra */
-    color: white;
-    text-align: center;
-  }
-  
-  .wrapper h1 {
-    font-size: 2em;
-    margin-bottom: 20px;
-  }
-  
-  .wrapper .input-box {
-    position: relative;
-    margin-bottom: 30px;
-  }
-  
-  .wrapper .input-box input {
-    width: 100%;
-    padding: 10px 15px;
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    outline: none;
-    border-radius: 30px;
-    font-size: 1em;
-    color: white;
-    letter-spacing: 1px;
-  }
-  
-  .wrapper .input-box input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-  }
-  
-  .wrapper .input-box i {
-    position: absolute;
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%);
-    color: rgba(255, 255, 255, 0.7);
-  }
-  
-  .wrapper .remember-forgot {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-  }
-  
-  .wrapper .remember-forgot label {
-    display: flex;
-    align-items: center;
-    font-size: 0.9em;
-  }
-  
-  .wrapper .remember-forgot a {
-    color: white;
-    font-size: 0.9em;
-    text-decoration: none;
-  }
-  
-  .wrapper .btn {
-    width: 100%;
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    outline: none;
-    border-radius: 30px;
-    font-size: 1em;
-    color: white;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-  
-  .wrapper .btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-  }
-  
-  .wrapper .register-link {
-    margin-top: 20px;
-  }
-  
-  .wrapper .register-link p {
-    font-size: 0.9em;
-  }
-  
-  .wrapper .register-link a {
-    color: white;
-    text-decoration: none;
-  }.btn-link {
-    background: none;
-    border: none;
-    color: white;
-    text-decoration: underline;
-    cursor: pointer;
-    padding: 0;
-    font: inherit;
-  }
- .cuadros-container-wrapper {
+  width: 400px;
+  padding: 40px 30px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+  color: white;
+  text-align: center;
+}
+
+.wrapper h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.wrapper .input-box {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.wrapper .input-box input {
+  width: 100%;
+  padding: 10px 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  outline: none;
+  border-radius: 30px;
+  font-size: 1em;
+  color: white;
+  letter-spacing: 1px;
+}
+
+.wrapper .input-box input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.wrapper .input-box i {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.wrapper .remember-forgot {
   display: flex;
-  justify-content: flex-start; 
-  align-items: flex-start; 
-  min-height: 50vh; 
-  padding-top: 20px; 
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.wrapper .remember-forgot label {
+  display: flex;
+  align-items: center;
+  font-size: 0.9em;
+}
+
+.wrapper .remember-forgot a {
+  color: white;
+  font-size: 0.9em;
+  text-decoration: none;
+}
+
+.wrapper .btn {
+  width: 100%;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  outline: none;
+  border-radius: 30px;
+  font-size: 1em;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.wrapper .btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.wrapper .register-link {
+  margin-top: 20px;
+}
+
+.wrapper .register-link p {
+  font-size: 0.9em;
+}
+
+.wrapper .register-link a {
+  color: white;
+  text-decoration: none;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: white;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+}
+
+.cuadros-container-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  min-height: 50vh;
+  padding-top: 20px;
 }
 
 .cuadros-container {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-start; 
-  margin-left: 20px; 
+  align-items: flex-start;
+  margin-left: 20px;
 }
 
 .cuadros-container .card {
-  flex: 0 1 calc(33.333% - 20px); 
+  flex: 0 1 calc(33.333% - 20px);
   margin: 10px;
-  width: 15rem; 
+  width: 15rem;
 }
 
 .cuadros-container .card .card-body {
@@ -243,8 +334,10 @@ body {
 }
 
 .cuadros-container .card .btn {
-  align-self: flex-end; 
-}.table img {
+  align-self: flex-end;
+}
+
+.table img {
   width: 50px;
   height: 50px;
   object-fit: cover;
@@ -253,66 +346,11 @@ body {
 .modal-content {
   max-width: 500px;
   margin: auto;
-}.sales-table-container {
-  background: #f8f9fa;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-
-    h2 {
-      margin: 0;
-    }
-
-    .search-box {
-      width: 250px;
-    }
-  }
-
-  .table {
-    margin-top: 20px;
-    
-    th, td {
-      vertical-align: middle;
-      text-align: center;
-    }
-
-    .product-image {
-      width: 50px;
-      height: 50px;
-      transition: transform 0.2s;
-      &:hover {
-        transform: scale(1.1);
-      }
-    }
-  }
-
-  .modal-body {
-    .form-group {
-      margin-bottom: 15px;
-    }
-    
-    .mt-3 {
-      margin-top: 15px;
-      p {
-        margin: 0;
-      }
-    }
-
-    .img-fluid {
-      max-width: 100%;
-      height: auto;
-    }
-  }
 }
+
 .inventory-manager {
   margin: 20px;
-  
+
   h2 {
     text-align: center;
     margin-bottom: 20px;

@@ -36,9 +36,15 @@ export const ApiClient = {
           return res.data;
         
       },
-        delete: async (productId) => {
+      delete: async (productId) => {
+        try {
             await axios.delete(`${API_URL}/products/${productId}`);
+        } catch (error) {
+            // Manejar el error de manera adecuada
+            console.error('Error deleting product:', error.response ? error.response.data : error.message);
+            throw error;
         }
+    }
     },
     sales: {
         create: async (data) => {
