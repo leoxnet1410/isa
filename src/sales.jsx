@@ -11,10 +11,10 @@ const Sales = () => {
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
-    fetchProducts();
+    getProducts();
   }, []);
 
-  const fetchProducts = async () => {
+  const getProducts = async () => {
     try {
       const data = await ApiClient.products.getAll();
       setProducts(data);
@@ -53,26 +53,37 @@ const Sales = () => {
   const handleSell = async () => {
     if (selectedProduct && saleQuantity > 0 && saleQuantity <= selectedProduct.quantity) {
       try {
-        const updatedProduct = {
-          ...selectedProduct,
-          quantity: selectedProduct.quantity - saleQuantity,
+        const updatedData = {
+          product: {
+            code: selectedProduct.code,
+            name: selectedProduct.name,
+            price: parseFloat(selectedProduct.price) || 0,
+            quantity: selectedProduct.quantity - saleQuantity,
+            category: selectedProduct.category,
+            description: selectedProduct.description
+          }
         };
 
+        // Crear la venta
         await ApiClient.sales.create({
-          sale: { 
+          sale: {
             product_id: selectedProduct.id,
             quantity: saleQuantity,
             discount: discount,
           }
         });
 
-        await ApiClient.products.update(selectedProduct.id, updatedProduct);
+        // Actualizar el producto
+        await ApiClient.products.update(selectedProduct.id, updatedData);
 
-        fetchProducts();
+        // Refrescar la lista de productos y cerrar el modal
+        getProducts();
         handleClose();
       } catch (error) {
         console.error('Error selling product:', error);
       }
+    } else {
+      console.error('Invalid quantity or product');
     }
   };
 

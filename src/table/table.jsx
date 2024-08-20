@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form } from 'react-bootstrap';
-import { ApiClient } from '../api/ApiClient'; 
+import { ApiClient } from '../api/ApiClient';
 
 const ProductTable = () => {
   const [products, setProducts] = useState([]);
@@ -31,7 +31,10 @@ const ProductTable = () => {
   const handleShow = (product = null) => {
     setEditingProduct(product);
     if (product) {
-      setProductData(product);
+      setProductData({
+        ...product,
+        price: product.price.toString()  // Si es un número, conviértelo a string para el formulario
+      });
     } else {
       setProductData({
         code: '',
@@ -39,7 +42,7 @@ const ProductTable = () => {
         price: '',
         category: '',
         quantity: '',
-        description: '' 
+        description: ''
       });
     }
     setShow(true);
@@ -57,20 +60,28 @@ const ProductTable = () => {
   const handleSubmit = async () => {
     try {
       const payload = {
-        product: productData
+        product: {
+          ...productData,
+          price: parseFloat(productData.price) || 0
+        }
       };
+      console.log('Submitting product:', payload);
   
+      let response;
       if (editingProduct) {
-        await ApiClient.products.update(editingProduct.id, payload);
+        response = await ApiClient.products.update(editingProduct.id, payload);
       } else {
-        await ApiClient.products.add(payload);
+        response = await ApiClient.products.add(payload);
       }
-      fetchProducts();
+      console.log('Server response:', response);
+  
+      await fetchProducts();
       handleClose();
     } catch (error) {
       console.error('Error saving product:', error);
     }
   };
+  
 
   const handleDelete = async (id) => {
     try {
@@ -92,7 +103,7 @@ const ProductTable = () => {
             <th>Precio</th>
             <th>Categoría</th>
             <th>Cantidad</th>
-            <th>Descripción</th> 
+            <th>Descripción</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -141,7 +152,8 @@ const ProductTable = () => {
             <Form.Group controlId="formProductPrice">
               <Form.Label>Precio</Form.Label>
               <Form.Control
-                type="text"
+                type="number"
+                step="0.01" // Permite valores decimales
                 name="price"
                 value={productData.price}
                 onChange={handleChange}
