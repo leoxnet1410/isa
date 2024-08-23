@@ -1,3 +1,4 @@
+// Sales.js
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form, Card } from 'react-bootstrap';
 import { ApiClient } from './api/ApiClient';
@@ -53,6 +54,15 @@ const Sales = () => {
   const handleSell = async () => {
     if (selectedProduct && saleQuantity > 0 && saleQuantity <= selectedProduct.quantity) {
       try {
+        // Crear la venta
+        await ApiClient.sales.create({
+          product_id: selectedProduct.id,
+          quantity: saleQuantity,
+          discount: parseFloat(discount),
+          total: parseFloat(total)
+        });
+  
+        // Actualizar el producto
         const updatedData = {
           product: {
             code: selectedProduct.code,
@@ -63,12 +73,9 @@ const Sales = () => {
             description: selectedProduct.description
           }
         };
-
-        // Crear la venta
-        
-        // Actualizar el producto
+  
         await ApiClient.products.update(selectedProduct.id, updatedData);
-
+  
         // Refrescar la lista de productos y cerrar el modal
         getProducts();
         handleClose();
@@ -80,12 +87,12 @@ const Sales = () => {
     }
   };
 
+
   return (
     <div className="sales-table-container">
       <Card className="p-4">
         <Card.Header className="d-flex justify-content-between align-items-center">
           <h2>Ventas</h2>
-         
         </Card.Header>
         <Card.Body>
           <Table striped bordered hover className="table-custom">

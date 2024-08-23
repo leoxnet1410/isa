@@ -350,40 +350,84 @@ body {
 
 .inventory-manager {
   margin: 20px;
-
+}
   h2 {
     text-align: center;
     margin-bottom: 20px;
   }
-
-  .table {
-    border: 1px solid #dee2e6;
-    border-radius: 0.25rem;
-    overflow: hidden;
-    background-color: #fff;
-
-    th, td {
-      vertical-align: middle;
-      text-align: center;
-    }
-
-    thead {
-      background-color: #f8f9fa;
-
-      th {
-        font-weight: bold;
+  .product-table-container {
+    padding: 20px;
+  
+    .button-container {
+      display: flex;
+      justify-content: flex-end; // Alinea el botón al lado derecho
+      margin-bottom: 15px;
+  
+      .btn-primary {
+        display: block;
       }
     }
-
-    tbody {
-      tr:nth-child(even) {
-        background-color: #f2f2f2;
+  
+    .table-custom {
+      border: 1px solid #dee2e6;
+      border-radius: 0.25rem;
+      overflow: hidden;
+      background-color: #fff;
+  
+      th, td {
+        vertical-align: middle;
+        text-align: center;
+      }
+  
+      thead {
+        background-color: #f8f9fa;
+  
+        th {
+          font-weight: bold;
+        }
+      }
+  
+      tbody {
+        tr:nth-child(even) {
+          background-color: #f2f2f2;
+        }
       }
     }
   }
+.menu-button {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background-color: #007bff;
+  border-color: #007bff;
+  &:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+  }
+}
 
-  .btn-primary {
-    display: block;
-    margin: 20px auto;
+.navigation-offcanvas {
+  .offcanvas-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  .offcanvas-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+
+  .offcanvas-body {
+    padding: 1rem;
+    background-color: #ffffff;
+
+    .nav-link {
+      color: #007bff;
+      font-size: 1rem;
+      &:hover {
+        color: #0056b3;
+        text-decoration: underline;
+      }
+    }
   }
 }

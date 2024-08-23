@@ -1,3 +1,4 @@
+// ProductTable.js
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form } from 'react-bootstrap';
 import { ApiClient } from '../api/ApiClient';
@@ -65,138 +66,133 @@ const ProductTable = () => {
           price: parseFloat(productData.price) || 0
         }
       };
-      console.log('Submitting product:', payload);
-
-      let response;
+  
       if (editingProduct) {
-        response = await ApiClient.products.update(editingProduct.id, payload);
+        await ApiClient.products.update(editingProduct.id, payload);
       } else {
-        response = await ApiClient.products.add(payload);
+        await ApiClient.products.add(payload);
       }
-      console.log('Server response:', response);
-
+  
       await fetchProducts();
       handleClose();
     } catch (error) {
       console.error('Error saving product:', error);
     }
   };
-
   const handleDelete = async (productId) => {
     try {
       await ApiClient.products.delete(productId);
       await fetchProducts();
     } catch (error) {
-      console.error('Error deleting product:', error.response ? error.response.data : error.message);
-      alert('No se pudo eliminar el producto. Asegúrate de que no tenga ventas asociadas.');
+      console.error('Error deleting product:', error);
     }
   };
 
   return (
-    <>
-      <Button variant="primary" onClick={() => handleShow()} className="button-custom">Crear Producto</Button>
-      <Table striped bordered hover className="table-custom">
-        <thead>
-          <tr>
-            <th>Código</th>
-            <th>Nombre</th>
-            <th>Precio</th>
-            <th>Categoría</th>
-            <th>Cantidad</th>
-            <th>Descripción</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map(product => (
-            <tr key={product.id}>
-              <td>{product.code}</td>
-              <td>{product.name}</td>
-              <td>{product.price}</td>
-              <td>{product.category}</td>
-              <td>{product.quantity}</td>
-              <td>{product.description}</td>
-              <td>
-                <Button variant="warning" onClick={() => handleShow(product)} className="button-custom">Editar</Button>{' '}
-                <Button variant="danger" onClick={() => handleDelete(product.id)} className="button-custom">Eliminar</Button>
-              </td>
+      <div className="product-table-container">
+        <div className="button-container">
+          <Button variant="primary" onClick={() => handleShow()}>Agregar Producto</Button>
+        </div>
+  
+        <Table striped bordered hover className="table-custom">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Nombre</th>
+              <th>Precio</th>
+              <th>Categoría</th>
+              <th>Cantidad</th>
+              <th>Descripción</th>
+              <th>Acciones</th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
-
-      <Modal show={show} onHide={handleClose} className="modal-custom">
-        <Modal.Header closeButton>
-          <Modal.Title>{editingProduct ? 'Editar Producto' : 'Crear Producto'}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group controlId="formProductCode">
-              <Form.Label>Código</Form.Label>
-              <Form.Control
-                type="text"
-                name="code"
-                value={productData.code}
-                onChange={handleChange}
-              />
-            </Form.Group>
-            <Form.Group controlId="formProductName">
-              <Form.Label>Nombre</Form.Label>
-              <Form.Control
-                type="text"
-                name="name"
-                value={productData.name}
-                onChange={handleChange}
-              />
-            </Form.Group>
-            <Form.Group controlId="formProductPrice">
-              <Form.Label>Precio</Form.Label>
-              <Form.Control
-                type="number"
-                step="0.01"
-                name="price"
-                value={productData.price}
-                onChange={handleChange}
-              />
-            </Form.Group>
-            <Form.Group controlId="formProductCategory">
-              <Form.Label>Categoría</Form.Label>
-              <Form.Control
-                type="text"
-                name="category"
-                value={productData.category}
-                onChange={handleChange}
-              />
-            </Form.Group>
-            <Form.Group controlId="formProductQuantity">
-              <Form.Label>Cantidad</Form.Label>
-              <Form.Control
-                type="text"
-                name="quantity"
-                value={productData.quantity}
-                onChange={handleChange}
-              />
-            </Form.Group>
-            <Form.Group controlId="formProductDescription">
-              <Form.Label>Descripción</Form.Label>
-              <Form.Control
-                as="textarea"
-                name="description"
-                value={productData.description}
-                onChange={handleChange}
-              />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>Cancelar</Button>
-          <Button variant="primary" onClick={handleSubmit}>
-            {editingProduct ? 'Guardar Cambios' : 'Crear Producto'}
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
-  );
-};
-
-export default ProductTable;
+          </thead>
+          <tbody>
+            {products.map(product => (
+              <tr key={product.id}>
+                <td>{product.code}</td>
+                <td>{product.name}</td>
+                <td>{product.price}</td>
+                <td>{product.category}</td>
+                <td>{product.quantity}</td>
+                <td>{product.description}</td>
+                <td>
+                  <Button variant="warning" onClick={() => handleShow(product)}>Editar</Button>
+                  <Button variant="danger" onClick={() => handleDelete(product.id)}>Eliminar</Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+  
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>{editingProduct ? 'Editar Producto' : 'Agregar Producto'}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Form.Group controlId="formCode">
+                <Form.Label>Código</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="code"
+                  value={productData.code}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group controlId="formName">
+                <Form.Label>Nombre</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="name"
+                  value={productData.name}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group controlId="formPrice">
+                <Form.Label>Precio</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="price"
+                  value={productData.price}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group controlId="formCategory">
+                <Form.Label>Categoría</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="category"
+                  value={productData.category}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group controlId="formQuantity">
+                <Form.Label>Cantidad</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="quantity"
+                  value={productData.quantity}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group controlId="formDescription">
+                <Form.Label>Descripción</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="description"
+                  value={productData.description}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>Cancelar</Button>
+            <Button variant="primary" onClick={handleSubmit}>{editingProduct ? 'Guardar Cambios' : 'Agregar Producto'}</Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
+    );
+  };
+  
+  export default ProductTable;

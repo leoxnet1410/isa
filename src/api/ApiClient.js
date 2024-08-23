@@ -1,6 +1,6 @@
+// apiClient.js
 import axios from 'axios';
 
-// apiClient.js
 const API_URL = 'http://localhost:3000';
 
 export const ApiClient = {
@@ -34,22 +34,25 @@ export const ApiClient = {
           };
           const res = await axios.post(`${API_URL}/products`, { product: newData });
           return res.data;
+        },
+            delete: async (productId) => {
+              try {
+                const response = await axios.delete(`http://localhost:3000/products/${productId}`);
+                return response.data;
+              } catch (error) {
+                console.error('Error deleting product:', error.response ? error.response.data : error.message);
+                throw error;
+              }
+            },
+          },
+      
         
-      },
-      delete: async (productId) => {
-        try {
-            await axios.delete(`${API_URL}/products/${productId}`);
-        } catch (error) {
-            // Manejar el error de manera adecuada
-            console.error('Error deleting product:', error.response ? error.response.data : error.message);
-            throw error;
-        }
-    }
-    },
-    sales: {
-        create: async (data) => {
-            const res = await axios.post(`${API_URL}/sales`, data);
-            return res.data;
-        }
-    }
+        
+       
+          sales: {
+            create: async (data) => {
+              const res = await axios.post(`${API_URL}/sales`, { sale: data });
+              return res.data;
+            }
+          }
 };
