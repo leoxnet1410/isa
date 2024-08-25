@@ -3,10 +3,12 @@ import { Container, Row, Col } from "react-bootstrap";
 import ProductTable from './table/table'
 import Login from "./home/form";
 import Cuadros from "./home/welcome";
-import Sales from "./sales";
+import Sales from "./sales/sales";
 import Navegation from "./navbar";
-
+import SalesList from "./sales/salesList";
 import ProductForm from "./table/ProductForm";
+import ProductCard from "./catalog"
+
 import './App.scss'
 
 
@@ -26,8 +28,9 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="welcome" element={<Cuadros />} />
         <Route path="sales" element={<Sales />} />
-     
+        <Route path="salesList" element={<SalesList />} />
         <Route path="form" element={<ProductForm/>} />
+        <Route path="catalog" element={<ProductCard/>} />
 
         </Routes>
       </Container>

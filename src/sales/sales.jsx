@@ -1,15 +1,16 @@
-// Sales.js
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Card } from 'react-bootstrap';
-import { ApiClient } from './api/ApiClient';
+import { Table, Button, Modal, Form, Card, InputGroup } from 'react-bootstrap';
+import { ApiClient } from '../api/ApiClient';
 
 const Sales = () => {
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [show, setShow] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [saleQuantity, setSaleQuantity] = useState('');
   const [discount, setDiscount] = useState(0);
   const [total, setTotal] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     getProducts();
@@ -19,6 +20,7 @@ const Sales = () => {
     try {
       const data = await ApiClient.products.getAll();
       setProducts(data);
+      setFilteredProducts(data);
     } catch (error) {
       console.error('Error fetching products:', error);
     }
@@ -87,12 +89,29 @@ const Sales = () => {
     }
   };
 
+  const handleSearch = (e) => {
+    const term = e.target.value.toLowerCase();
+    setSearchTerm(term);
+    const filtered = products.filter(product =>
+      product.code.toLowerCase().includes(term) ||
+      product.name.toLowerCase().includes(term)
+    );
+    setFilteredProducts(filtered);
+  };
 
   return (
     <div className="sales-table-container">
       <Card className="p-4">
         <Card.Header className="d-flex justify-content-between align-items-center">
           <h2>Ventas</h2>
+          <InputGroup className="w-50">
+            <Form.Control
+              type="text"
+              placeholder="Buscar por código o nombre"
+              value={searchTerm}
+              onChange={handleSearch}
+            />
+          </InputGroup>
         </Card.Header>
         <Card.Body>
           <Table striped bordered hover className="table-custom">
@@ -108,7 +127,7 @@ const Sales = () => {
               </tr>
             </thead>
             <tbody>
-              {products.map(product => (
+              {filteredProducts.map(product => (
                 <tr key={product.id}>
                   <td>{product.code}</td>
                   <td>{product.name}</td>
