@@ -1,22 +1,20 @@
-// styles/global.scss
-
 // Estilos generales para la aplicación
 body {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: url('./home/img/fondo11.jpg') no-repeat center center/cover;
+  background: url('./img/fondo11.jpg') no-repeat center center/cover;
 }
 
 * {
   font-family: 'Poppins', sans-serif;
 }
 
-// Contenedor general para las tablas de ventas
+// Componente: Tabla de Ventas
 .sales-table-container {
   margin: 20px;
-  
+
   .sales-table-card {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -98,308 +96,187 @@ body {
   }
 }
 
-// Estilos específicos para el componente ProductTable
+// Componente: Tabla de Productos
+
 .product-table-container {
   margin: 20px;
   background: #f8f9fa;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow-x: auto; /* Enable horizontal scrolling if necessary */
 }
 
-.product-table-card {
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
-  .card-header {
-    background: #007bff;
-    color: #fff;
-
-    .btn-primary {
-      margin-top: 10px;
-    }
-  }
-
-  .card-body {
-    padding: 20px;
-  }
-}
-
-.product-table-custom {
-  background-color: #f9f9f9;
-  border-radius: 8px;
+.table-custom {
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  width: 1500px; /* Increase the width of the table */
+  min-width: 100%; /* Ensure the table takes up at least the full width of the container */
+
+  th, td {
+    vertical-align: middle;
+    text-align: center;
+    padding: 10px; /* Add padding to increase the width of each cell */
+  }
 
   thead {
-    background-color: #007bff;
-    color: #fff;
+    background-color: #f8f9fa;
 
     th {
       font-weight: bold;
-      text-align: center;
     }
   }
 
   tbody {
-    tr {
-      &:nth-child(even) {
-        background-color: #f2f2f2;
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+  }
+
+  .product-table-card {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    .card-header {
+      background: #007bff;
+      color: #fff;
+
+      .btn-primary {
+        margin-top: 10px;
       }
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+  }
+
+  .product-table-custom {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 1rem;
+    font-size: 0.875rem;
+
+    thead {
+      background-color: #007bff;
+      color: #fff;
+
+      th {
+        font-weight: bold;
+        text-align: center;
+      }
+    }
+
+    tbody {
+      tr {
+        &:nth-child(even) {
+          background-color: #f2f2f2;
+        }
+
+        &:hover {
+          background-color: #e9ecef;
+        }
+      }
+
+      td {
+        text-align: center;
+      }
+    }
+  }
+
+  .product-modal-custom {
+    .modal-header {
+      background-color: #007bff;
+      color: #fff;
+      border-bottom: none;
+    }
+
+    .modal-footer {
+      border-top: none;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
+
+    .btn-secondary {
+      border: none;
 
       &:hover {
         background-color: #e9ecef;
       }
     }
+  }
 
-    td {
-      text-align: center;
-    }
+  .product-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+  }
+
+  .product-button-custom {
+    margin: 0.5rem;
+    font-size: 0.875rem;
   }
 }
 
-.product-modal-custom {
-  .modal-header {
-    background-color: #007bff;
-    color: #fff;
-    border-bottom: none;
-  }
-
-  .modal-footer {
-    border-top: none;
-  }
-
-  .btn-primary {
-    background-color: #007bff;
-    border: none;
-
-    &:hover {
-      background-color: #0056b3;
-    }
-  }
-
-  .btn-secondary {
-    border: none;
-
-    &:hover {
-      background-color: #e9ecef;
-    }
-  }
-}
-
-.product-image {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-}
-
-.product-button-custom {
-  margin: 0.5rem;
-  font-size: 0.875rem;
-}
-
-.product-table-custom {
-  margin-top: 1rem;
-  font-size: 0.875rem;
-}
-
-.wrapper {
-  width: 400px;
-  padding: 40px 30px;
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 10px;
-  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
-  color: white;
-  text-align: center;
-}
-
-.wrapper h1 {
-  font-size: 2em;
-  margin-bottom: 20px;
-}
-
-.wrapper .input-box {
-  position: relative;
-  margin-bottom: 30px;
-}
-
-.wrapper .input-box input {
-  width: 100%;
-  padding: 10px 15px;
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  outline: none;
-  border-radius: 30px;
-  font-size: 1em;
-  color: white;
-  letter-spacing: 1px;
-}
-
-.wrapper .input-box input::placeholder {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.wrapper .input-box i {
-  position: absolute;
-  top: 50%;
-  right: 20px;
-  transform: translateY(-50%);
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.wrapper .remember-forgot {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-}
-
-.wrapper .remember-forgot label {
-  display: flex;
-  align-items: center;
-  font-size: 0.9em;
-}
-
-.wrapper .remember-forgot a {
-  color: white;
-  font-size: 0.9em;
-  text-decoration: none;
-}
-
-.wrapper .btn {
-  width: 100%;
-  padding: 10px;
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  outline: none;
-  border-radius: 30px;
-  font-size: 1em;
-  color: white;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.wrapper .btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.wrapper .register-link {
-  margin-top: 20px;
-}
-
-.wrapper .register-link p {
-  font-size: 0.9em;
-}
-
-.wrapper .register-link a {
-  color: white;
-  text-decoration: none;
-}
-
-.btn-link {
-  background: none;
-  border: none;
-  color: white;
-  text-decoration: underline;
-  cursor: pointer;
-  padding: 0;
-  font: inherit;
-}
-
+// Componente: Cuadros de Bienvenida
 .cuadros-container-wrapper {
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  min-height: 50vh;
-  padding-top: 20px;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 .cuadros-container {
+  display: grid;
+  grid-template-columns: repeat(2, auto); /* Dos columnas */
+  gap: 20px; /* Espacio entre los cuadros */
+}
+
+.image-container {
+  width: 100%;
+  height: 150px; /* Ajusta esta altura según sea necesario */
+  overflow: hidden;
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  margin-left: 20px;
+  justify-content: center;
+  align-items: center;
 }
 
-.cuadros-container .card {
-  flex: 0 1 calc(33.333% - 20px);
-  margin: 10px;
-  width: 15rem;
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Asegura que la imagen cubra el contenedor sin distorsión */
 }
 
-.cuadros-container .card .card-body {
+.button-container {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-end; /* Alinea el botón a la derecha */
 }
 
-.cuadros-container .card .btn {
-  align-self: flex-end;
+.ir-button {
+  margin-top: 10px;
+  background-color: black;
 }
 
-.table img {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-}
 
-.modal-content {
-  max-width: 500px;
-  margin: auto;
-}
-
-.inventory-manager {
-  margin: 20px;
-}
-  h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  .product-table-container {
-    padding: 20px;
-  
-    .button-container {
-      display: flex;
-      justify-content: flex-end; // Alinea el botón al lado derecho
-      margin-bottom: 15px;
-  
-      .btn-primary {
-        display: block;
-      }
-    }
-  
-    .table-custom {
-      border: 1px solid #dee2e6;
-      border-radius: 0.25rem;
-      overflow: hidden;
-      background-color: #fff;
-  
-      th, td {
-        vertical-align: middle;
-        text-align: center;
-      }
-  
-      thead {
-        background-color: #f8f9fa;
-  
-        th {
-          font-weight: bold;
-        }
-      }
-  
-      tbody {
-        tr:nth-child(even) {
-          background-color: #f2f2f2;
-        }
-      }
-    }
-  }
+// Componente: Botón de Menú y Navegación
 .menu-button {
   position: fixed;
   top: 10px;
   right: 10px;
   background-color: #007bff;
   border-color: #007bff;
+
   &:hover {
     background-color: #0056b3;
     border-color: #004085;
@@ -424,13 +301,17 @@ body {
     .nav-link {
       color: #007bff;
       font-size: 1rem;
+
       &:hover {
         color: #0056b3;
         text-decoration: underline;
       }
     }
   }
-}.card {
+}
+
+// Componente: Card Genérico
+.card {
   margin: 20px;
   padding: 20px;
   border: 1px solid #ddd;
@@ -445,28 +326,32 @@ body {
   text-align: center;
 }
 
+// Componente: SalesTable
 .sales-table {
   width: 100%;
   border-collapse: collapse;
+
+  th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f4f4f4;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  tr:hover {
+    background-color: #f1f1f1;
+  }
 }
 
-.sales-table th, .sales-table td {
-  padding: 12px;
-  border: 1px solid #ddd;
-  text-align: left;
-}
-
-.sales-table th {
-  background-color: #f4f4f4;
-}
-
-.sales-table tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-.sales-table tr:hover {
-  background-color: #f1f1f1;
-}.catalog-container {
+// Componente: Catálogo
+.catalog-container {
   padding: 20px;
 }
 
@@ -488,4 +373,107 @@ body {
   width: 100%;
   height: 200px; /* Ajusta la altura según tus necesidades */
   object-fit: cover;
+}
+// Estilos específicos para el componente Login
+.login-wrapper {
+  width: 400px;
+  padding: 40px 30px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+  color: white;
+  text-align: center;
+
+  h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+
+  .input-box {
+    position: relative;
+    margin-bottom: 30px;
+
+    input {
+      width: 100%;
+      padding: 10px 15px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      outline: none;
+      border-radius: 30px;
+      font-size: 1em;
+      color: white;
+      letter-spacing: 1px;
+
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+      }
+    }
+
+    i {
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+
+  .remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+
+    label {
+      display: flex;
+      align-items: center;
+      font-size: 0.9em;
+    }
+
+    a {
+      color: white;
+      font-size: 0.9em;
+      text-decoration: none;
+    }
+  }
+
+  .btn {
+    width: 100%;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    outline: none;
+    border-radius: 30px;
+    font-size: 1em;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  .register-link {
+    margin-top: 20px;
+
+    p {
+      font-size: 0.9em;
+    }
+
+    a {
+      color: white;
+      text-decoration: none;
+    }
+  }
+
+  .btn-link {
+    background: none;
+    border: none;
+    color: white;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    font: inherit;
+  }
 }

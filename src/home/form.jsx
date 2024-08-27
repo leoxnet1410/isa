@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const Login = () => {
   return (
-    <div className='wrapper'>
+    <div className='login-wrapper'>
       <Form onSubmit={(e) => e.preventDefault()}>
         <h1>Iniciar Sesión</h1>
         <div className='input-box'>

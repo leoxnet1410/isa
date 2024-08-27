@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form } from 'react-bootstrap';
 import axios from 'axios';
 
-
 const ProductTable = () => {
   const [products, setProducts] = useState([]);
   const [show, setShow] = useState(false);
+  const [imageModalShow, setImageModalShow] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
   const [editingProduct, setEditingProduct] = useState(null);
   const [productData, setProductData] = useState({
     code: '',
@@ -14,30 +15,29 @@ const ProductTable = () => {
     category: '',
     quantity: '',
     description: '',
-    image: null // Nueva propiedad para la imagen
+    image: null,
   });
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
-  // Obtener productos desde el backend
   const fetchProducts = async () => {
     try {
       const response = await axios.get('http://localhost:3000/products', { withCredentials: true });
-      console.log(response.data); // Verifica la respuesta en la consola
       setProducts(response.data);
     } catch (error) {
       console.error('Error fetching products:', error);
     }
   };
+
   const handleShow = (product = null) => {
     setEditingProduct(product);
     if (product) {
       setProductData({
         ...product,
         price: product.price.toString(),
-        image: null // Resetear la imagen cuando se edita un producto
+        image: null,
       });
     } else {
       setProductData({
@@ -47,7 +47,7 @@ const ProductTable = () => {
         category: '',
         quantity: '',
         description: '',
-        image: null
+        image: null,
       });
     }
     setShow(true);
@@ -58,7 +58,7 @@ const ProductTable = () => {
   const handleChange = (e) => {
     setProductData({
       ...productData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -66,15 +66,13 @@ const ProductTable = () => {
     const file = e.target.files[0];
     setProductData({
       ...productData,
-      image: file
+      image: file,
     });
   };
 
   const handleSubmit = async () => {
     try {
       const formData = new FormData();
-
-      // Agrupar todos los datos bajo la clave 'product'
       formData.append('product[code]', productData.code);
       formData.append('product[name]', productData.name);
       formData.append('product[price]', parseFloat(productData.price) || 0);
@@ -87,15 +85,13 @@ const ProductTable = () => {
       }
 
       if (editingProduct) {
-        // Editar producto existente
         await axios.put(`http://localhost:3000/products/${editingProduct.id}`, formData, { withCredentials: true });
       } else {
-        // Agregar nuevo producto
         await axios.post('http://localhost:3000/products', formData, { withCredentials: true });
       }
 
-      await fetchProducts(); // Recargar la lista de productos después de guardar
-      handleClose(); // Cerrar el modal
+      await fetchProducts();
+      handleClose();
     } catch (error) {
       console.error('Error saving product:', error.response?.data || error.message);
     }
@@ -104,59 +100,88 @@ const ProductTable = () => {
   const handleDelete = async (productId) => {
     try {
       await axios.delete(`http://localhost:3000/products/${productId}`, { withCredentials: true });
-      await fetchProducts(); // Recargar la lista de productos después de eliminar
+      await fetchProducts();
     } catch (error) {
       console.error('Error deleting product:', error);
     }
   };
+
+  const handleImageClick = (imageUrl) => {
+    setSelectedImage(imageUrl);
+    setImageModalShow(true);
+  };
+
+  const closeImageModal = () => setImageModalShow(false);
 
   return (
     <div className="product-table-container">
       <div className="header-container">
         <h1 style={{ float: 'left' }}>INVENTARIO</h1>
         <div className="button-container" style={{ float: 'right' }}>
-          <Button variant="primary" onClick={() => handleShow()}>Agregar Producto</Button>
+          <Button 
+            variant="success" // Cambiado a 'success' para color verde
+            onClick={() => handleShow()}
+          >
+            Agregar Producto
+          </Button>
         </div>
       </div>
 
       <Table striped bordered hover className="table-custom" style={{ clear: 'both' }}>
         <thead>
           <tr>
-            <th>Imagen</th>
             <th>Código</th>
             <th>Nombre</th>
             <th>Precio</th>
             <th>Categoría</th>
             <th>Cantidad</th>
+            <th>Imagen</th>
             <th>Descripción</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {products.map(product => (
+          {products.map((product) => (
             <tr key={product.id}>
-              <td>
-                {product.image_url ? (
-                  <img src={product.image_url} alt={product.name} style={{ width: '100px', height: 'auto' }} />
-                ) : (
-                  'Sin imagen'
-                )}
-              </td>
               <td>{product.code}</td>
               <td>{product.name}</td>
               <td>{product.price}</td>
               <td>{product.category}</td>
               <td>{product.quantity}</td>
+              <td>
+                {product.image_url ? (
+                  <img
+                    src={`http://localhost:3000${product.image_url}`}
+                    alt={product.name}
+                    style={{ width: '100px', height: '100px', cursor: 'pointer' }}
+                    onClick={() => handleImageClick(`http://localhost:3000${product.image_url}`)}
+                  />
+                ) : (
+                  'Sin imagen'
+                )}
+              </td>
               <td>{product.description}</td>
               <td>
-                <Button variant="warning" onClick={() => handleShow(product)}>Editar</Button>
-                <Button variant="danger" onClick={() => handleDelete(product.id)}>Eliminar</Button>
+                <Button 
+                  variant="warning" 
+                  onClick={() => handleShow(product)}
+                  style={{ marginRight: '10px' }} // Espacio entre botones
+                >
+                  Editar
+                </Button>
+                <Button 
+                  variant="danger" 
+                  onClick={() => handleDelete(product.id)}
+                >
+                  Eliminar
+                </Button>
               </td>
             </tr>
           ))}
         </tbody>
       </Table>
 
+      {/* Modal para agregar/editar productos */}
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>{editingProduct ? 'Editar Producto' : 'Agregar Producto'}</Modal.Title>
@@ -228,9 +253,29 @@ const ProductTable = () => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>Cancelar</Button>
-          <Button variant="primary" onClick={handleSubmit}>{editingProduct ? 'Guardar Cambios' : 'Agregar Producto'}</Button>
+          <Button variant="secondary" onClick={handleClose}>
+            Cancelar
+          </Button>
+          <Button variant="primary" onClick={handleSubmit}>
+            {editingProduct ? 'Guardar Cambios' : 'Agregar Producto'}
+          </Button>
         </Modal.Footer>
+      </Modal>
+
+      {/* Modal para mostrar la imagen en grande */}
+      <Modal show={imageModalShow} onHide={closeImageModal} size="lg">
+        <Modal.Header closeButton>
+       
+        </Modal.Header>
+        <Modal.Body>
+          {selectedImage && (
+            <img
+              src={selectedImage}
+              alt="Producto"
+              style={{ width: '100%', height: 'auto' }}
+            />
+          )}
+        </Modal.Body>
       </Modal>
     </div>
   );
