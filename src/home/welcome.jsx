@@ -1,15 +1,21 @@
 import React from 'react';
 import { Card, Button } from 'react-bootstrap';
-import fondoImage from './img/fondo.jpg';
-
+import fondoImage from '../img/fondo.jpg';
+import catalogo1Image from '../img/catalogo1.jpg';
+import fondo6Image from '../img/fondo6.jpg';
+import imagenImage from '../img/imagen.jpg';
 
 const Cuadro = ({ imagenSrc, descripcion, ruta }) => {
   return (
     <Card style={{ margin: '10px', width: '15rem' }}>
-      <Card.Img variant="top" src={imagenSrc} />
+      <div className="image-container">
+        <Card.Img variant="top" src={imagenSrc} className="card-image" />
+      </div>
       <Card.Body>
         <Card.Text>{descripcion}</Card.Text>
-        <Button href={ruta}>Ir</Button>
+        <div className="button-container">
+          <Button href={ruta} className="ir-button">Avanzar</Button>
+        </div>
       </Card.Body>
     </Card>
   );
@@ -20,32 +26,22 @@ const Cuadros = () => {
     {
       imagenSrc: fondoImage,
       descripcion: 'Ventas',
-      ruta: '/',
+      ruta: 'sales',
     },
     {
-      imagenSrc: fondoImage,
+      imagenSrc: fondo6Image,
       descripcion: 'Inventario',
       ruta: '/table',
     },
     {
-      imagenSrc: fondoImage,
-      descripcion: 'Pedidos',
-      ruta: '/componente3',
+      imagenSrc: imagenImage,
+      descripcion: 'Historial de Ventas',
+      ruta: 'salesList',
     },
     {
-      imagenSrc: fondoImage,
-      descripcion: 'catalogo',
-      ruta: '/componente4',
-    },
-    {
-      imagenSrc: fondoImage,
-      descripcion: 'Descripción 5',
-      ruta: '/componente5',
-    },
-    {
-      imagenSrc: fondoImage,
-      descripcion: 'Descripción 6',
-      ruta: '/componente6',
+      imagenSrc: catalogo1Image,
+      descripcion: 'Catalogo',
+      ruta: 'catalog',
     },
   ];
 

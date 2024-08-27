@@ -1,194 +1,443 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+// Estilos generales para la aplicación
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: url('./home/img/123.jpg') no-repeat center center/cover;
-  }
-  
-  .product-table-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    width: 100%;
-    padding: 20px;
-  }
-  
-  .table-container {
-    width: 100%;
-    max-width: 1200px;
-    padding: 20px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .table {
-    width: 100%;
-    margin-top: 20px;
-  }
-  
-  .table th,
-  .table td {
-    text-align: center;
-    vertical-align: middle;
-  }
-  
-  .table th {
-    font-weight: bold;
-  }
-  
-  .table .d-flex {
-    display: flex;
-    justify-content: space-around;
-  }
-  
-  .modal-content {
-    background-color: white;
-  }
-  
-  .modal-body input {
-    margin-bottom: 10px;
-  }
-  
-  button {
-    margin: 0 5px;
-  }
-  .modal-header {
-    background-color: #0a0b0c;
-    color: white;
-    border-bottom: 1px solid #dee2e6;
-  }
-  
-  .modal-body {
-    padding: 1.5rem;
-  }
-  
-  .form-control {
-    margin-bottom: 0.5rem;
-  }
-  
-  .btn {
-    border-radius: 0.25rem;
-  }
-  
-  .btn-warning {
-    background-color: #ffc107;
-    border-color: #ffc107;
-  }
-  
-  .btn-warning:hover {
-    background-color: #e0a800;
-    border-color: #d39e00;
-  }
-  
-  .btn-danger {
-    background-color: #dc3545;
-    border-color: #dc3545;
-  }
-  
-  .btn-danger:hover {
-    background-color: #c82333;
-    border-color: #bd2130;
-  }
-  
-  .btn-success {
-    background-color: #28a745;
-    border-color: #28a745;
-  }
-  
-  .btn-success:hover {
-    background-color: #218838;
-    border-color: #1e7e34;
-  }
-  
-  .d-flex {
-    display: flex;
-  }
-  
-  .justify-content-end {
-    justify-content: flex-end;
-  }
-  
-  .mb-3 {
-    margin-bottom: 1rem;
-  }
- 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url('./img/fondo11.jpg') no-repeat center center/cover;
+}
+
 * {
- 
-  
   font-family: 'Poppins', sans-serif;
 }
 
+// Componente: Tabla de Ventas
+.sales-table-container {
+  margin: 20px;
 
+  .sales-table-card {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
-.wrapper {
-    width: 400px;
-    padding: 40px 30px;
-    background: rgba(0, 0, 0, 0.5); /* Ajuste del color de fondo */
-    border-radius: 10px;
-    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5); /* Ajuste de la sombra */
-    color: white;
-    text-align: center;
+    .card-header {
+      background: #007bff;
+      color: #fff;
+
+      .btn-primary {
+        margin-top: 10px;
+      }
+    }
+
+    .card-body {
+      padding: 20px;
+    }
   }
-  
-  .wrapper h1 {
+
+  .sales-table-custom {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    thead {
+      background-color: #007bff;
+      color: #fff;
+
+      th {
+        font-weight: bold;
+        text-align: center;
+      }
+    }
+
+    tbody {
+      tr {
+        &:nth-child(even) {
+          background-color: #f2f2f2;
+        }
+
+        &:hover {
+          background-color: #e9ecef;
+        }
+      }
+
+      td {
+        text-align: center;
+      }
+    }
+  }
+
+  .modal-custom {
+    .modal-header {
+      background-color: #007bff;
+      color: #fff;
+      border-bottom: none;
+    }
+
+    .modal-footer {
+      border-top: none;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
+
+    .btn-secondary {
+      border: none;
+
+      &:hover {
+        background-color: #e9ecef;
+      }
+    }
+  }
+}
+
+// Componente: Tabla de Productos
+
+.product-table-container {
+  margin: 20px;
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow-x: auto; /* Enable horizontal scrolling if necessary */
+}
+
+.table-custom {
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  background-color: #fff;
+  width: 1500px; /* Increase the width of the table */
+  min-width: 100%; /* Ensure the table takes up at least the full width of the container */
+
+  th, td {
+    vertical-align: middle;
+    text-align: center;
+    padding: 10px; /* Add padding to increase the width of each cell */
+  }
+
+  thead {
+    background-color: #f8f9fa;
+
+    th {
+      font-weight: bold;
+    }
+  }
+
+  tbody {
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+  }
+
+  .product-table-card {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    .card-header {
+      background: #007bff;
+      color: #fff;
+
+      .btn-primary {
+        margin-top: 10px;
+      }
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+  }
+
+  .product-table-custom {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 1rem;
+    font-size: 0.875rem;
+
+    thead {
+      background-color: #007bff;
+      color: #fff;
+
+      th {
+        font-weight: bold;
+        text-align: center;
+      }
+    }
+
+    tbody {
+      tr {
+        &:nth-child(even) {
+          background-color: #f2f2f2;
+        }
+
+        &:hover {
+          background-color: #e9ecef;
+        }
+      }
+
+      td {
+        text-align: center;
+      }
+    }
+  }
+
+  .product-modal-custom {
+    .modal-header {
+      background-color: #007bff;
+      color: #fff;
+      border-bottom: none;
+    }
+
+    .modal-footer {
+      border-top: none;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
+
+    .btn-secondary {
+      border: none;
+
+      &:hover {
+        background-color: #e9ecef;
+      }
+    }
+  }
+
+  .product-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+  }
+
+  .product-button-custom {
+    margin: 0.5rem;
+    font-size: 0.875rem;
+  }
+}
+
+// Componente: Cuadros de Bienvenida
+.cuadros-container-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.cuadros-container {
+  display: grid;
+  grid-template-columns: repeat(2, auto); /* Dos columnas */
+  gap: 20px; /* Espacio entre los cuadros */
+}
+
+.image-container {
+  width: 100%;
+  height: 150px; /* Ajusta esta altura según sea necesario */
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Asegura que la imagen cubra el contenedor sin distorsión */
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end; /* Alinea el botón a la derecha */
+}
+
+.ir-button {
+  margin-top: 10px;
+  background-color: black;
+}
+
+
+// Componente: Botón de Menú y Navegación
+.menu-button {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background-color: #007bff;
+  border-color: #007bff;
+
+  &:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+  }
+}
+
+.navigation-offcanvas {
+  .offcanvas-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  .offcanvas-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+
+  .offcanvas-body {
+    padding: 1rem;
+    background-color: #ffffff;
+
+    .nav-link {
+      color: #007bff;
+      font-size: 1rem;
+
+      &:hover {
+        color: #0056b3;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// Componente: Card Genérico
+.card {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+.card-title {
+  margin-bottom: 20px;
+  font-size: 1.5em;
+  text-align: center;
+}
+
+// Componente: SalesTable
+.sales-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f4f4f4;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  tr:hover {
+    background-color: #f1f1f1;
+  }
+}
+
+// Componente: Catálogo
+.catalog-container {
+  padding: 20px;
+}
+
+.catalog-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.catalog-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  max-width: 18rem;
+}
+
+.catalog-card-img {
+  width: 100%;
+  height: 200px; /* Ajusta la altura según tus necesidades */
+  object-fit: cover;
+}
+// Estilos específicos para el componente Login
+.login-wrapper {
+  width: 400px;
+  padding: 40px 30px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+  color: white;
+  text-align: center;
+
+  h1 {
     font-size: 2em;
     margin-bottom: 20px;
   }
-  
-  .wrapper .input-box {
+
+  .input-box {
     position: relative;
     margin-bottom: 30px;
+
+    input {
+      width: 100%;
+      padding: 10px 15px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      outline: none;
+      border-radius: 30px;
+      font-size: 1em;
+      color: white;
+      letter-spacing: 1px;
+
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+      }
+    }
+
+    i {
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.7);
+    }
   }
-  
-  .wrapper .input-box input {
-    width: 100%;
-    padding: 10px 15px;
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    outline: none;
-    border-radius: 30px;
-    font-size: 1em;
-    color: white;
-    letter-spacing: 1px;
-  }
-  
-  .wrapper .input-box input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-  }
-  
-  .wrapper .input-box i {
-    position: absolute;
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%);
-    color: rgba(255, 255, 255, 0.7);
-  }
-  
-  .wrapper .remember-forgot {
+
+  .remember-forgot {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
+
+    label {
+      display: flex;
+      align-items: center;
+      font-size: 0.9em;
+    }
+
+    a {
+      color: white;
+      font-size: 0.9em;
+      text-decoration: none;
+    }
   }
-  
-  .wrapper .remember-forgot label {
-    display: flex;
-    align-items: center;
-    font-size: 0.9em;
-  }
-  
-  .wrapper .remember-forgot a {
-    color: white;
-    font-size: 0.9em;
-    text-decoration: none;
-  }
-  
-  .wrapper .btn {
+
+  .btn {
     width: 100%;
     padding: 10px;
     background: rgba(255, 255, 255, 0.1);
@@ -199,24 +448,26 @@ body {
     color: white;
     cursor: pointer;
     transition: background 0.3s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
   }
-  
-  .wrapper .btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-  }
-  
-  .wrapper .register-link {
+
+  .register-link {
     margin-top: 20px;
+
+    p {
+      font-size: 0.9em;
+    }
+
+    a {
+      color: white;
+      text-decoration: none;
+    }
   }
-  
-  .wrapper .register-link p {
-    font-size: 0.9em;
-  }
-  
-  .wrapper .register-link a {
-    color: white;
-    text-decoration: none;
-  }.btn-link {
+
+  .btn-link {
     background: none;
     border: none;
     color: white;
@@ -225,33 +476,4 @@ body {
     padding: 0;
     font: inherit;
   }
- .cuadros-container-wrapper {
-  display: flex;
-  justify-content: flex-start; /* Alinea los elementos al inicio del contenedor */
-  align-items: flex-start; /* Alinea los elementos al inicio del contenedor */
-  min-height: 50vh; /* Ocupa la mitad de la altura de la vista */
-  padding-top: 20px; /* Añade un poco de espacio en la parte superior */
-}
-
-.cuadros-container {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start; /* Alinea los elementos al inicio del contenedor */
-  margin-left: 20px; /* Mueve el contenedor hacia la izquierda */
-}
-
-.cuadros-container .card {
-  flex: 0 1 calc(33.333% - 20px); /* Hace que las tarjetas ocupen un tercio del contenedor con espacio entre ellas */
-  margin: 10px;
-  width: 15rem; /* Ajusta el ancho de las tarjetas */
-}
-
-.cuadros-container .card .card-body {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.cuadros-container .card .btn {
-  align-self: flex-end; /* Alinea el botón al final del contenedor de flex */
 }
