@@ -5,15 +5,20 @@ import { ApiClient } from '../api/ApiClient';
 const Sales = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [customers, setCustomers] = useState([]);
   const [show, setShow] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [saleQuantity, setSaleQuantity] = useState('');
   const [discount, setDiscount] = useState(0);
   const [total, setTotal] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imageModalShow, setImageModalShow] = useState(false);
+  const [customerId, setCustomerId] = useState('');
 
   useEffect(() => {
     getProducts();
+    getCustomers();
   }, []);
 
   const getProducts = async () => {
@@ -26,11 +31,21 @@ const Sales = () => {
     }
   };
 
+  const getCustomers = async () => {
+    try {
+      const data = await ApiClient.customers.getAll();
+      setCustomers(data);
+    } catch (error) {
+      console.error('Error fetching customers:', error);
+    }
+  };
+
   const handleShow = (product) => {
     setSelectedProduct(product);
     setSaleQuantity('');
     setDiscount(0);
     setTotal(0);
+    setCustomerId('');
     setShow(true);
   };
 
@@ -39,32 +54,38 @@ const Sales = () => {
   const handleQuantityChange = (e) => {
     const quantity = e.target.value;
     setSaleQuantity(quantity);
-    calculateTotal(quantity, discount, selectedProduct.price);
+    calculateTotal(quantity, discount, selectedProduct?.price || 0);
+  };
+  const handleDiscountChange = (e) => {
+    const discountValue = e.target.value;
+    const parsedDiscount = discountValue === '' ? 0 : parseInt(discountValue, 10);  
+    calculateTotal(saleQuantity, parsedDiscount, selectedProduct?.price || 0);
   };
 
-  const handleDiscountChange = (e) => {
-    const discount = e.target.value;
-    setDiscount(discount);
-    calculateTotal(saleQuantity, discount, selectedProduct.price);
+  const handleCustomerChange = (e) => {
+    setCustomerId(e.target.value);
   };
 
   const calculateTotal = (quantity, discount, price) => {
-    const total = (quantity * price) * (1 - discount / 100);
-    setTotal(total.toFixed(2));
+    const parsedQuantity = parseInt(quantity, 10) || 0;
+    const parsedDiscount = parseFloat(discount) || 0;
+    const parsedPrice = parseFloat(price) || 0;
+  
+    const totalValue = parsedQuantity * parsedPrice - parsedDiscount;
+    
+    setTotal(totalValue > 0 ? totalValue.toFixed(2) : 0);
   };
-
   const handleSell = async () => {
-    if (selectedProduct && saleQuantity > 0 && saleQuantity <= selectedProduct.quantity) {
+    if (selectedProduct && saleQuantity > 0 && saleQuantity <= selectedProduct.quantity && customerId) {
       try {
-        // Crear la venta
         await ApiClient.sales.create({
           product_id: selectedProduct.id,
           quantity: saleQuantity,
           discount: parseFloat(discount),
-          total: parseFloat(total)
+          total: parseFloat(total),
+          customer_id: customerId
         });
-  
-        // Actualizar el producto
+
         const updatedData = {
           product: {
             code: selectedProduct.code,
@@ -75,17 +96,16 @@ const Sales = () => {
             description: selectedProduct.description
           }
         };
-  
+
         await ApiClient.products.update(selectedProduct.id, updatedData);
-  
-        // Refrescar la lista de productos y cerrar el modal
+
         getProducts();
         handleClose();
       } catch (error) {
         console.error('Error selling product:', error);
       }
     } else {
-      console.error('Invalid quantity or product');
+      console.error('Invalid quantity, product or customer');
     }
   };
 
@@ -97,6 +117,11 @@ const Sales = () => {
       product.name.toLowerCase().includes(term)
     );
     setFilteredProducts(filtered);
+  };
+
+  const handleImageClick = (imageUrl) => {
+    setSelectedImage(imageUrl);
+    setImageModalShow(true);
   };
 
   return (
@@ -121,6 +146,7 @@ const Sales = () => {
                 <th>Nombre</th>
                 <th>Precio</th>
                 <th>Categoría</th>
+                <th>Imagen</th>
                 <th>Descripción</th>
                 <th>Cantidad</th>
                 <th>Acciones</th>
@@ -133,6 +159,18 @@ const Sales = () => {
                   <td>{product.name}</td>
                   <td>{product.price}</td>
                   <td>{product.category}</td>
+                  <td>
+                    {product.image_url ? (
+                      <img
+                        src={`http://localhost:3000${product.image_url}`}
+                        alt={product.name}
+                        style={{ width: '100px', height: '100px', cursor: 'pointer' }}
+                        onClick={() => handleImageClick(`http://localhost:3000${product.image_url}`)}
+                      />
+                    ) : (
+                      'Sin imagen'
+                    )}
+                  </td>
                   <td>{product.description}</td>
                   <td>{product.quantity}</td>
                   <td>
@@ -151,43 +189,71 @@ const Sales = () => {
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group controlId="formSaleQuantity">
-              <Form.Label>Unidades a Vender</Form.Label>
+            <Form.Group controlId="formCustomerName">
+              <Form.Label>Cliente</Form.Label>
+              <Form.Control
+                as="select"
+                value={customerId}
+                onChange={handleCustomerChange}
+              >
+                <option value="">Seleccionar cliente</option>
+                {customers.map(customer => (
+                  <option key={customer.id} value={customer.id}>
+                    {customer.nombre} {customer.apellido}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="formProductName">
+              <Form.Label>Producto</Form.Label>
+              <Form.Control type="text" readOnly value={selectedProduct?.name || ''} />
+            </Form.Group>
+            <Form.Group controlId="formProductPrice">
+              <Form.Label>Precio</Form.Label>
+              <Form.Control type="number" readOnly value={selectedProduct?.price || 0} />
+            </Form.Group>
+            <Form.Group controlId="formProductQuantity">
+              <Form.Label>Cantidad</Form.Label>
               <Form.Control
                 type="number"
-                name="quantity"
                 value={saleQuantity}
                 onChange={handleQuantityChange}
+                max={selectedProduct?.quantity || 0}
                 min="1"
-                max={selectedProduct ? selectedProduct.quantity : ''}
               />
             </Form.Group>
-            <Form.Group controlId="formDiscount">
-              <Form.Label>Descuento (%)</Form.Label>
+            <Form.Group controlId="formProductDiscount">
+              <Form.Label>Descuento </Form.Label>
               <Form.Control
                 type="number"
-                name="discount"
                 value={discount}
                 onChange={handleDiscountChange}
                 min="0"
                 max="100"
+                step="1"  
               />
             </Form.Group>
-            <Form.Group controlId="formTotal">
+            <Form.Group controlId="formTotalPrice">
               <Form.Label>Total</Form.Label>
-              <Form.Control
-                type="text"
-                name="total"
-                value={total}
-                readOnly
-              />
+              <Form.Control type="number" readOnly value={total} />
             </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>Cancelar</Button>
-          <Button variant="primary" onClick={handleSell}>Vender</Button>
+          <Button variant="secondary" onClick={handleClose}>
+            Cancelar
+          </Button>
+          <Button variant="primary" onClick={handleSell}>
+            Confirmar Venta
+          </Button>
         </Modal.Footer>
+      </Modal>
+
+      {/* Modal para mostrar la imagen en tamaño completo */}
+      <Modal show={imageModalShow} onHide={() => setImageModalShow(false)} centered>
+        <Modal.Body className="text-center">
+          <img src={selectedImage} alt="Producto" className="img-fluid" />
+        </Modal.Body>
       </Modal>
     </div>
   );

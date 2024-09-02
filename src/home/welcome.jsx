@@ -4,6 +4,7 @@ import fondoImage from '../img/fondo.jpg';
 import catalogo1Image from '../img/catalogo1.jpg';
 import fondo6Image from '../img/fondo6.jpg';
 import imagenImage from '../img/imagen.jpg';
+import clientesImage from '../img/clientes.webp';
 
 const Cuadro = ({ imagenSrc, descripcion, ruta }) => {
   return (
@@ -42,6 +43,11 @@ const Cuadros = () => {
       imagenSrc: catalogo1Image,
       descripcion: 'Catalogo',
       ruta: 'catalog',
+    },
+    {
+      imagenSrc: clientesImage,
+      descripcion: 'Clientes',
+      ruta: 'clientTable',
     },
   ];
 

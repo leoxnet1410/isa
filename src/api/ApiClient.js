@@ -49,5 +49,24 @@ export const ApiClient = {
       const res = await axios.post(`${API_URL}/sales`, { sale: data });
       return res.data;
     }
+  },
+  customers: {
+    getAll: async () => {
+      const res = await axios.get(`${API_URL}/customers`);
+      return res.data;
+    },
+    add: async (customerData) => {
+      // Los datos se envían como un objeto anidado bajo "customer"
+      const res = await axios.post(`${API_URL}/customers`, { customer: customerData });
+      return res.data;
+    },
+    update: async (id, customerData) => {
+      // Los datos se envían como un objeto anidado bajo "customer"
+      const res = await axios.put(`${API_URL}/customers/${id}`, { customer: customerData });
+      return res.data;
+    },
+    delete: async (id) => {
+      await axios.delete(`${API_URL}/customers/${id}`);
+    }
   }
 };

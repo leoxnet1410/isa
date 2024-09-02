@@ -8,6 +8,7 @@ import Sales from './sales/sales';
 import Navegation from './home/navbar';
 import SalesList from './sales/salesList';
 import ProductCard from './catalog';
+import CustomerTable from './table/clientTable'
 import './App.scss';
 
 const AppContent = () => {
@@ -26,6 +27,7 @@ const AppContent = () => {
         <Route path="sales" element={<Sales />} />
         <Route path="salesList" element={<SalesList />} />
         <Route path="catalog" element={<ProductCard />} />
+        <Route path="clientTable" element={<CustomerTable />} />
       </Routes>
     </>
   );

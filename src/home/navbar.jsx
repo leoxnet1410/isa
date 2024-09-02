@@ -24,6 +24,7 @@ const Navegation = () => {
             <Nav.Link href="table">Inventario</Nav.Link>
             <Nav.Link href="salesList">Historial de ventas</Nav.Link>
             <Nav.Link href="catalog">Catalogo</Nav.Link>
+            <Nav.Link href="clientTable">Clientes</Nav.Link>
           </Nav>
         </Offcanvas.Body>
       </Offcanvas>
